@@ -5,6 +5,8 @@ const app = express();  //initialize app variable
 
 connectDB();    // Connect Database
 
+app.use(express.json({ extended:false }));    //Init Middleware
+
 app.get('/', (req, res) => res.send('API Running')); // When the server receives a GET request from a url ending with /, send a response with data content 'API Running'
 
 app.use('/api/users', require('./routes/api/users')); //define routes
