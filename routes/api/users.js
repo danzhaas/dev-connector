@@ -2,6 +2,8 @@ const express = require ('express');
 const router = express.Router();
 const gravatar = require ('gravatar');  // user avatar database
 const bcrypt = require('bcryptjs'); // encryption package
+const jwt = require('jsonwebtoken');    // js web token
+const config = require('config');   //allows us to access other json files 
 const { check, validationResult } = require('express-validator'); //the methods for request validation
 
 const User = require('../../models/User');
@@ -51,12 +53,24 @@ router.post(
             const salt = await bcrypt.genSalt(10); // Encrypt password part 1: generate salt with 10 digits; 
             user.password = await bcrypt.hash(password, salt);  // Encrypt password part 2: generate the hashed password;
 
-            await user.save();  //actually save the user document to the DB
-            // return jsonwebtoken
-            res.send('User registered');
+            await user.save();  //actually save the user document to the DB.  user is updated to match saved document object,  with the above fields plus _id, date, and __v
+            
+            const payload = {   // formats user id for jwt generation
+                user: { 
+                    id: user.id
+                }
+            }
+            jwt.sign(   // returns token or error asynchronously
+                payload, 
+                config.get('jwtSecret'),    // this secret is in default.json
+                { expiresIn:360000 },   //how long in SECONDS the token will be valid
+                (err, token) => {
+                    if (err) throw err;
+                    res.json({ token });    // sends token to user
+                }
+            );
 
         } catch(err) {
-            
             console.error(err.message);
             res.status(500).send('Server Error');
         };
