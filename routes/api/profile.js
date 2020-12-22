@@ -13,7 +13,7 @@ router.get('/me', auth, async (req, res) => {
     try {
         const profile = await Profile
             .findOne({ user: req.user.id })   // find profile where user value matches the user id decoded from the user's jwt.  
-            .populate('user', ['name', 'avatar']);  //populate [something] with name and avatar from user 
+            .populate('user', ['name', 'avatar']);  //populate Profile object's user value with the name and avatar from referenced user document
 
         if (!profile) { // If there is no matching profile, 
             return res.status(400).json({ msg: 'There is no profile for this user' });
@@ -100,5 +100,61 @@ router.post('/', auth, [    //validate fields
         }
     }
 );
+
+// @route   GET api/profile  
+// @desc    Get all profiles
+// @access  Public
+router.get('/', async (req, res) => {
+    try {
+        const profiles = await Profile
+            .find()   // find all profile documents 
+            .populate('user', ['name', 'avatar']);  //populate Profile object's user value with the name and avatar from referenced user document
+        res.json(profiles);  // Send response containing profile objects.  
+    }
+    catch(err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+});
+
+// @route   GET api/profile/user/:user_id      
+// @desc    Get one user's profile
+// @access  Public
+router.get('/user/:user_id', async (req, res) => {  // the : signifies the following is a route parameter that will be accessible with req.params.user_id
+    try {
+        const profile = await Profile
+            .findOne({ user: req.params.user_id })    // find profile where user value matches the user_id route parameter in the url
+            .populate('user', ['name', 'avatar']);  // populate Profile object's user value with the name and avatar from referenced user document
+            if (!profile) return res.status(400).send('Profile not found'); // When the user_id is correct ObjectId format (12 digits) but doesn't match any documents
+        res.json(profile);  // Send response containing profile object.  
+    }
+    catch(err) {
+        console.error(err.message);
+        if (err.kind == 'ObjectId') {   // An ObjectId error is thrown when the user_id route parameter is not a 12-digit string and thus not the format of ObjectId.  
+            return res.status(400).send('Profile not found');   // We still want to communicate no profile is there
+        }
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   DELETE api/profile  
+// @desc    Delete profile, user, & posts
+// @access  Private
+router.delete('/', auth, async (req, res) => {
+    try {
+        // @todo - remove users posts
+
+        // Remove profile
+        await Profile.findOneAndRemove({ user: req.user.id });
+        //remove user
+        await User.findOneAndRemove({ _id: req.user.id });
+
+        res.json({ msg: 'User deleted'})
+    }
+    catch(err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+});
 
 module.exports = router;
