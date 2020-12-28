@@ -7,7 +7,7 @@ const Post = require('../../models/Post');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 
-// @route   POST routes/api/posts/
+// @route   POST api/posts/
 // @desc    Create a post
 // @access  Private
 router.post('/', 
@@ -38,11 +38,64 @@ router.post('/',
             const post = await newPost.save();  // declares post as the saved newPost Post document
 
             res.json(post); // responds with the saved Post document 
-        } catch (error) {
+        } catch (err) {
             console.error(err.message);
             res.status(500).send('Server Error');
         }
     }
 )
+
+// @route   GET api/posts/
+// @desc    Get all posts
+// @access  Private
+router.get('/', auth, async(req, res) => {  
+    try {
+        const posts = await Post.find().sort({ date: -1 }); // date: -1 sorts by descending date
+        res.json(posts);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   GET api/posts/:id
+// @desc    Get post by ID
+// @access  Private
+router.get('/:id', auth, async(req, res) => {   // :id is a placeholder parameter
+    try {
+        const post = await Post.findById( req.params.id );  // findById method with argument req.params.id
+
+        if (!post) return res.status(404).json({ msg: 'Post not found'});   // for if the id doesn't match a post 
+
+        res.json(post);
+    } catch (err) {
+        console.error(err.message);
+        if (err.kind === 'ObjectId') return res.status(404).json({ msg: 'Post not found'}); // for if req.params.id isn't 12 digits
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   DELETE api/posts/:id
+// @desc    Delete a post 
+// @access  Private
+router.delete('/:id', auth, async(req, res) => {
+    try {
+        const post = await Post.findById( req.params.id );  // findById method taking req.params.id as an argument
+
+        if (!post) return res.status(404).json({ msg: 'Post not found'});
+
+        //check user
+        if (post.user.toString() !== req.user.id) return res.status(401).json({ msg: 'User not authorized'});  // note: user is type ObjectId and will not === a string with same contents.  Hence we use toString()
+
+        await post.remove();
+
+        res.json({ msg: 'Post removed' });
+    } catch (err) {
+        console.error(err.message);
+        if (err.kind === 'ObjectId') return res.status(404).json({ msg: 'Post not found'});
+        res.status(500).send('Server Error');
+    }
+});
+
 
 module.exports = router;
