@@ -146,5 +146,79 @@ router.put('/unlike/:id', auth, async (req,res) => {
     }
 })
 
+// @route   POST api/posts/comment/:id
+// @desc    Comment on a post
+// @access  Private
+router.post('/comment/:id', 
+    [ // middleware
+        auth, // authentication
+        [   // validation checks
+            check('text', 'Text is required') // checks if text is entered - cannot be empty
+                .not()
+                .isEmpty()
+        ]
+    ],
+    async (req, res) => {
+
+        const errors = validationResult(req);   // validation results
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        try {
+            const user = await User.findById(req.user.id).select('-password');  // declares user which references the user document corresponding to user's token, but doesn't include their password for security reasons
+
+            const post = await Post.findById( req.params.id)
+            
+            const newComment = {  // declares the new comment and populates the name and avatar values with data from the User document 
+                text: req.body.text,
+                name: user.name,
+                avatar:user.avatar,
+                user:req.user.id
+            };
+
+            post.comments.unshift(newComment);  // Adds comment to front of comments array 
+
+            await post.save(); 
+
+            res.json(post.comments); // responds with all comments for this post
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error');
+        }
+    }
+);
+
+// @route   DELETE api/posts/comment/:id/:comment_id
+// @desc    Delete comment on a post
+// @access  Private
+router.post('/comment/:id/:comment_id', auth, async (req, res) => {
+    try {
+        const post = await Post.findById( req.params.id );
+
+        // Pull out comment
+        const comment = post.comments.find(comment => comment.id === req.params.comment_id);
+        if (!comment) return res.status(404).json({ msg:"Comment does not exist" });
+
+        // Check user
+        if (comment.user.toString() !== req.user.id) {
+            return res.status(401).json({ msg:"User not authorized" })
+        };
+
+        // Get remove index
+        const removeIndex = post.comments
+            .map(comment => comment.id === req.params.comment_id)
+            .indexOf(true); // get position of comment in comments array using map method and indexOf req.params.comment_id
+        
+        post.comments.splice(removeIndex, 1);   // splice out comment with remove index
+
+        await post.save();  // saves post as the post with newly spliced comments
+
+        res.json(post.comments); // responds with saved comments
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+})
 
 module.exports = router;
