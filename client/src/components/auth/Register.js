@@ -1,5 +1,6 @@
 import React, { Fragment, useState} from 'react';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
+// import axios from 'axios';  // Also needed to access back end
 
 const Register = () => {
     const [ formData, setFormData ] = useState({
@@ -25,7 +26,29 @@ const Register = () => {
         if (password !== password2) {
             console.log('Passwords do not match')
         } else {
-            console.log(formData);
+            // // How to access the back end
+            // const newUser = {
+            //     name, 
+            //     email, 
+            //     password
+            // }
+
+            // try {
+            //     const config = {
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         }
+            //     }
+
+            //     const body = JSON.stringify(newUser);
+                
+            //     // successful response returns a jwt
+                // const res = await axios.post('/api/users', body, config);
+            //     console.log(res.data);
+            // } catch (err) {
+            //     console.error(err.response.data)
+            // }
+            console.log('Success');
         }
     }
 
@@ -80,7 +103,7 @@ const Register = () => {
                 <input type="submit" class="btn btn-primary" value="Register" />
             </form>
             <p class="my-1">
-                Already have an account? <a href="login.html">Sign In</a>
+                Already have an account? <Link to="/login">Sign In</Link>
             </p>
         </Fragment>
     )
