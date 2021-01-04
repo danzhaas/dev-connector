@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import alert from './alert';
 
-export default combineReducers({    //The combineReducers helper function turns an object whose values are different reducing functions into a single reducing function you can pass to createStore.
-    alert   //
+export default combineReducers({    // Turns an object whose values are different reducer functions, into a single reducer function. It will call every child reducer, and gather their results into a single state object, whose keys correspond to the keys of the passed reducer functions.
+    alert   
 })

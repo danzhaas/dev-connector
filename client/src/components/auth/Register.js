@@ -1,8 +1,10 @@
 import React, { Fragment, useState} from 'react';
 import { Link } from 'react-router-dom';
-// import axios from 'axios';  // Also needed to access back end
+import { connect } from 'react-redux';  // connects to redux
+import { setAlert } from '../../actions/alert'; // the action that sends new alert data to reducer
+import PropTypes from 'prop-types';
 
-const Register = () => {
+const Register = ({ setAlert }) => {
     const [ formData, setFormData ] = useState({
         name: '',
         email: '',
@@ -24,40 +26,18 @@ const Register = () => {
     const onSubmit = async e => {
         e.preventDefault(); // prevents form submission which is the default onSubmit for this element
         if (password !== password2) {
-            console.log('Passwords do not match')
+            setAlert('Passwords do not match', 'danger')    // calls setAlert action with arguments (msg, alertType)
         } else {
-            // // How to access the back end
-            // const newUser = {
-            //     name, 
-            //     email, 
-            //     password
-            // }
-
-            // try {
-            //     const config = {
-            //         headers: {
-            //             'Content-Type': 'application/json'
-            //         }
-            //     }
-
-            //     const body = JSON.stringify(newUser);
-                
-            //     // successful response returns a jwt
-                // const res = await axios.post('/api/users', body, config);
-            //     console.log(res.data);
-            // } catch (err) {
-            //     console.error(err.response.data)
-            // }
             console.log('Success');
         }
     }
 
     return (
         <Fragment> 
-            <h1 class="large text-primary">Sign Up</h1>
-            <p class="lead"><i class="fas fa-user"></i> Create Your Account</p>
-            <form class="form" onSubmit={ e => onSubmit(e) } >
-                <div class="form-group">
+            <h1 className="large text-primary">Sign Up</h1>
+            <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
+            <form className="form" onSubmit={ e => onSubmit(e) } >
+                <div className="form-group">
                     <input 
                         type="text" 
                         placeholder="Name" 
@@ -67,7 +47,7 @@ const Register = () => {
                         required 
                     />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                     <input 
                         type="email" 
                         placeholder="Email Address" 
@@ -75,12 +55,12 @@ const Register = () => {
                         value={email}
                         onChange={e => onChange(e)}
                     />
-                    <small class="form-text"
+                    <small className="form-text"
                         >This site uses Gravatar so if you want a profile image, use a
                         Gravatar email</small
                     >
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                     <input
                         type="password"
                         placeholder="Password"
@@ -90,7 +70,7 @@ const Register = () => {
                         onChange={e => onChange(e)}
                     />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                     <input
                         type="password"
                         placeholder="Confirm Password"
@@ -100,13 +80,21 @@ const Register = () => {
                         onChange={e => onChange(e)}
                     />
                 </div>
-                <input type="submit" class="btn btn-primary" value="Register" />
+                <input type="submit" className="btn btn-primary" value="Register" />
             </form>
-            <p class="my-1">
+            <p className="my-1">
                 Already have an account? <Link to="/login">Sign In</Link>
             </p>
         </Fragment>
     )
 }
 
-export default Register;
+Register.propTypes = {
+    setAlert:PropTypes.func.isRequired,
+}
+
+{/* Lets us use setAlert within props */}
+export default connect(
+    null, 
+    { setAlert }
+)(Register);
