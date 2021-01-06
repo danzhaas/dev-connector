@@ -1,10 +1,11 @@
-import React, { Fragment, useState} from 'react';
+import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';  // connects to redux
 import { setAlert } from '../../actions/alert'; // the action that sends new alert data to reducer
+import { register } from '../../actions/auth'; 
 import PropTypes from 'prop-types';
 
-const Register = ({ setAlert }) => {
+const Register = ({ setAlert, register }) => {
     const [ formData, setFormData ] = useState({
         name: '',
         email: '',
@@ -28,7 +29,8 @@ const Register = ({ setAlert }) => {
         if (password !== password2) {
             setAlert('Passwords do not match', 'danger')    // calls setAlert action with arguments (msg, alertType)
         } else {
-            console.log('Success');
+            register({ name, email, password });
+            setAlert('Registration successful', 'success')    // calls setAlert action with arguments (msg, alertType)
         }
     }
 
@@ -54,6 +56,7 @@ const Register = ({ setAlert }) => {
                         name="email" 
                         value={email}
                         onChange={e => onChange(e)}
+                        required 
                     />
                     <small className="form-text"
                         >This site uses Gravatar so if you want a profile image, use a
@@ -68,6 +71,7 @@ const Register = ({ setAlert }) => {
                         value={password}
                         minLength="6"
                         onChange={e => onChange(e)}
+                        required 
                     />
                 </div>
                 <div className="form-group">
@@ -78,6 +82,7 @@ const Register = ({ setAlert }) => {
                         value={password2}
                         minLength="6"
                         onChange={e => onChange(e)}
+                        required 
                     />
                 </div>
                 <input type="submit" className="btn btn-primary" value="Register" />
@@ -91,10 +96,11 @@ const Register = ({ setAlert }) => {
 
 Register.propTypes = {
     setAlert:PropTypes.func.isRequired,
+    register:PropTypes.func.isRequired
 }
 
 {/* Lets us use setAlert within props */}
 export default connect(
     null, 
-    { setAlert }
+    { setAlert, register }
 )(Register);
