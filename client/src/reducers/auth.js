@@ -1,34 +1,44 @@
 import {
     REGISTER_SUCCESS,
-    REGISTER_FAIL
+    REGISTER_FAIL,
+    USER_LOADED, 
+    AUTH_ERROR
 } from '../actions/types';
 
-const initialState = {
-    token: localStorage.getItem('token'),
-    isAuthenticated: null,
-    loading: true,
-    user: null
+const initialState = {  
+    token: localStorage.getItem('token'),   // if jwt is in local storage, get it
+    isAuthenticated: null,  // not authenticated by default
+    loading: true,  // loading by default
+    user: null  // user unknown by default
 }
 
 export default function( state = initialState, action ) {
-    const { type, payload } = action;
+    const { type, payload } = action;   // deconstructing the variables in the action
 
-    switch(type) {
-        case 'REGISTER_SUCCESS':
-            localStorage.setItem('token', payload.token)    ;
+    switch(type) {  // if type...
+        case 'USER_LOADED':
             return {
                 ...state,
-                ...payload,
-                isAuthenticated: true,
-                loading: false,
+                isAuthenticated:true,
+                loading:false,
+                user:payload
             }
-        case 'REGISTER_FAIL':
-            localStorage.removeItem('token');
+        case 'REGISTER_SUCCESS':    // ...is this...
+            localStorage.setItem('token', payload.token);  //set token in client local storage to payload.token
             return {
-                ...state,
-                token:null,
-                isAuthenticated: false,
-                loading: false,
+                ...state,   // current state
+                ...payload, // current payload
+                isAuthenticated: true,  // successfully registered and thus authenticated
+                loading: false, 
+            }
+        case 'AUTH_ERROR':
+        case 'REGISTER_FAIL': // ...is this...
+            localStorage.removeItem('token');  // remove token
+            return {
+                ...state,   // current state
+                token:null, // no token
+                isAuthenticated: false, // not auth
+                loading: false, // not loading
             }
         default:
             return state;

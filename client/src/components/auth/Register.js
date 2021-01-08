@@ -13,7 +13,7 @@ const Register = ({ setAlert, register }) => {
         password2: ''
     });
 
-    const { 
+    const {     // why do we have this twice?
         name, 
         email, 
         password, 
@@ -21,7 +21,7 @@ const Register = ({ setAlert, register }) => {
     } = formData;
 
     const onChange = e => setFormData({
-        ...formData, [e.target.name]: e.target.value    // computed property name
+        ...formData, [e.target.name]: e.target.value    // the brackets make this a computed property name, meaning the string referenced by the variable will be the key name.  JS API
     })
 
     const onSubmit = async e => {
@@ -99,7 +99,7 @@ Register.propTypes = {
     register:PropTypes.func.isRequired
 }
 
-{/* Lets us use setAlert within props */}
+{/* Lets us use setAlert and register actions within props */}
 export default connect(
     null, 
     { setAlert, register }
