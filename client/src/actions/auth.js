@@ -31,6 +31,7 @@ export const loadUser=() => async dispatch => {
     }
 }
 
+
 //Register user
 export const register = ({ name, email, password }) => async dispatch => {  // 
     const config = {    // configures HTTP request headers and other options
@@ -62,7 +63,6 @@ export const register = ({ name, email, password }) => async dispatch => {  //
         })
     }
 }
-
 
 
 //Login user

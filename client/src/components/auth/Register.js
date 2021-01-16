@@ -108,7 +108,6 @@ const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
 });
 
-{/* Lets us use setAlert and register actions within props */}
 export default connect(
     mapStateToProps, 
     { setAlert, register }
