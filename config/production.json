@@ -1,0 +1,6 @@
+{
+    "mongoURI": "mongodb+srv://danzhaas:Ep0nine!135797531@devconnector.xhnmy.mongodb.net/<dbname>?retryWrites=true&w=majority",
+    "jwtSecret": "anchorman6723138^^$VanillaSky",
+    "githubClientId":"3ab2c122de2849c1c1bb",
+    "githubSecret":"853482d17519c4f743cffa4a10c0dcfa0aaec00c"
+}
