@@ -17,9 +17,9 @@ const RoomSidebar = ({ getPosts, post: { posts, loading } }) => {
                 <Fragment>
                     <div className="users bg-light">
                     <h1 className='chat-heading'>Rooms</h1>
-                        {(posts.length > 0) ? (
+                            {(posts.length > 0) ? (
                             posts.map(post => (
-                                <RoomItem key={post._id} post={post} />
+                                <RoomItem post={post} />
                             ))
                         ) :
                             <h4>No rooms found...</h4>

@@ -42,6 +42,7 @@ const App = () => {
             <Switch>
               <Route exact path="/" component={Landing} />
               <PrivateRoute exact path="/chat" component={MainChat} />
+              <PrivateRoute exact path="/chat/:id" component={MainChat} />
             </Switch>
             <section className="container">
               <Alert />

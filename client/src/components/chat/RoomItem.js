@@ -1,17 +1,25 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux'
 import { getPost } from '../../actions/post';
 
-const RoomItem = ({ post: { _id, text } }) => {
-    
+const RoomItem = ({ 
+    auth, 
+    post: { 
+        _id, 
+        text, 
+        name, 
+        user
+    },
+    getPost
+}) => {
+
     return (
-        <div className='room-item'>                
-            {/* <Link to={`/post/${_id}`} > */}
-                <p onClick={ () => getPost({_id}) } >{text}</p>
-            {/* </Link> */}
-        </div>
+            <a className='room-item' key={_id} href={`/chat/${_id}`} onClick={ () => getPost({_id}) } >
+                {text}
+            </a>
     )
 }
 
-
-export default RoomItem
+export default connect(null, { getPost })(RoomItem)

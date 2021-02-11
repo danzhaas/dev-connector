@@ -12,9 +12,13 @@ import RoomSidebar from "./RoomSidebar"
 
 const MainChat = ({ getPost, post: { post, loading }, match }) => {
     useEffect(()=> {
-        getPost();
+        if (match.params.length===0) {
+            getPost("6024e3765262213ef0554571");
+        } else {
+            getPost(match.params.id);
+        }
         // getPost("6024e3765262213ef0554571");
-    },[getPost]);
+    },[getPost, match.params.id]);
 
     return loading || post === null ? 
     <Spinner /> 
@@ -26,9 +30,11 @@ const MainChat = ({ getPost, post: { post, loading }, match }) => {
             <div id="chat-window">
                 <h2 className="chat-heading">{post.text}</h2>
                 <div className="chat-items">
-                    {post.comments.reverse().map(comment => (
-                        <ChatItem comment={comment} />
-                    ))}
+                    <div id="the-items">
+                        {post.comments.reverse().map(comment => (
+                            <ChatItem comment={comment} />
+                        ))}
+                    </div>
                     <ChatForm postId={post._id} />
                 </div>
             </div>

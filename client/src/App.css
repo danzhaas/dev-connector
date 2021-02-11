@@ -563,15 +563,20 @@ button {
 .chat-items {
   position:absolute;
   bottom:0; 
-  height:75%;
+  /* height:75%; */
   width:100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  /* overflow-y: scroll; */
+}
+
+#the-items {
+  height:75%;
   overflow-y: scroll;
 }
 
-.chat-item {
+.chat-item, .room-item {
   display: flex;
   flex-direction: row;
   padding: 0 1rem;
