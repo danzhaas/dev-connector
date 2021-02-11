@@ -27,4 +27,3 @@ if(process.env.NODE_ENV === 'production') {    // Serve static assets in product
 const PORT = process.env.PORT || 5000;  //The port is looking for an environmental variable.  On this project it will come from Heroku, the SaaS where the server is deployed.  If no environmental varibale is present (local production), it uses local port 5000 instead.
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));  // server app should listen for a port; upon connection, logs the port referenced.
-
