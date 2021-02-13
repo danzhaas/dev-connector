@@ -1,14 +1,32 @@
 import React, { Fragment, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
-import UserItem from './UserItem';
+// import UserItem from './UserItem';
 import { getProfiles } from '../../actions/profile'
+
+
+const UserItem = ({ profile: { user: { _id, name }}}) => {
+    
+    return (
+        <div className='user-item'>
+                <strong>{name}</strong>{' '}
+                <Link to={`/profile/${_id}`} >
+                    <i className="fas fa-user"></i>{' '}
+                </Link>
+                <Link to={`/profile/${_id}`} >
+                    <i class="fas fa-comment-alt"></i>
+                </Link>
+        </div>
+    )
+}
 
 const UserSidebar = ({ getProfiles, profile:{ profiles,loading} }) => {
     useEffect(()=> {
-        getProfiles();
+        getProfiles("chat");
     }, [getProfiles])
+
     return (
         <section className="chat-sidebar">
             { loading ? 

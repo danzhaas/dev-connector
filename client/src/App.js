@@ -20,6 +20,7 @@ import PrivateRoute from './components/routing/PrivateRoute';
 import { Provider } from 'react-redux';
 import store from './store';
 import { loadUser } from './actions/auth';
+import { getPost, getPosts } from './actions/post';
 import setAuthToken from './utils/setAuthToken';
 
 import './App.css';
@@ -30,19 +31,17 @@ if(localStorage.token) {
 
 const App = () => {
   useEffect(() => {
-    store.dispatch(loadUser());
+    store.dispatch(loadUser())
   }, []);
 
   return (
     <Provider store={store}>
       <Router>
         <Fragment>
-          {/* <main> */}
             <Navbar />
             <Switch>
               <Route exact path="/" component={Landing} />
-              <PrivateRoute exact path="/chat" component={MainChat} />
-              <PrivateRoute exact path="/chat/:id" component={MainChat} />
+              <Route exact path="/chat/:id" component={MainChat} />
             </Switch>
             <section className="container">
               <Alert />
@@ -60,7 +59,6 @@ const App = () => {
                 <PrivateRoute exact path="/posts/:id" component={Post} />
               </Switch>          
             </section>
-            {/* </main> */}
         </Fragment>
       </Router>
     </Provider>

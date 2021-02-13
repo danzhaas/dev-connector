@@ -14,6 +14,7 @@ const ChatForm = ({ postId, addComment }) => {
                 setText('');
             }}>
                 <textarea
+                    id="chat-form"
                     name="text"
                     cols="30"
                     rows="1"

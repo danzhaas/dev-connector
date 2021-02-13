@@ -555,7 +555,7 @@ button {
   
 }
 
-.user-item, .room-item {
+.user-item, .thread-item {
   padding:0.25rem;
   color:black;
 }
@@ -571,15 +571,32 @@ button {
   /* overflow-y: scroll; */
 }
 
+.chat-item {
+  display: flex;
+  flex-direction: row;
+  padding: 0 1rem;
+}
+
+#chat-form {
+  padding: 0.5rem 1rem;
+}
+
+#thread-name {
+  padding: 0 1rem;
+}
+
 #the-items {
   height:75%;
   overflow-y: scroll;
 }
 
-.chat-item, .room-item {
+.thread-item {
   display: flex;
   flex-direction: row;
-  padding: 0 1rem;
+}
+
+#anon-notice {
+  color:rgb(247, 0, 255);
 }
 
 
