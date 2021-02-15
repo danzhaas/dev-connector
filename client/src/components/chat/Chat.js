@@ -3,7 +3,7 @@ import ChatWindow from './ChatWindow'
 import UserSidebar from "./UserSidebar"
 import ThreadSidebar from "./ThreadSidebar"
 
-const MainChat = ({ match }) => {
+const Chat = ({ match }) => {
 
     return (
         <section className="chat">
@@ -16,4 +16,4 @@ const MainChat = ({ match }) => {
     )
 }
 
-export default MainChat
+export default Chat

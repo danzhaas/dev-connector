@@ -8,7 +8,8 @@ import {
     ADD_POST,
     GET_POST,
     ADD_COMMENT,
-    REMOVE_COMMENT
+    REMOVE_COMMENT,
+    ANON_COMMENT
 } from './types';
 
 // Get posts
@@ -159,6 +160,31 @@ export const deleteComment = ( postId, commentId ) => async dispatch => {
         });
 
         dispatch(setAlert('Comment Removed', 'success'))
+    } catch (err) {
+        dispatch({
+            type: POST_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }
+        })
+    }
+}
+
+// Add Comment as Anon
+export const anonComment = ( postId, formData ) => async dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    try {
+        const res = await axios.post(`/api/posts/comment/anon/${postId}`, formData, config);
+
+        dispatch({
+            type:ANON_COMMENT,
+            payload: res.data
+        });
+
+        dispatch(setAlert('Comment Added', 'success'))
     } catch (err) {
         dispatch({
             type: POST_ERROR,

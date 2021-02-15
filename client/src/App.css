@@ -20,7 +20,8 @@
 }
 
 body {
-  font-family: 'Raleway', sans-serif;
+  /* font-family: 'Raleway', sans-serif; */
+  font-family: 'Roboto', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   background-color: #fff;
@@ -347,6 +348,10 @@ button {
   margin-right: 0.6rem;
 }
 
+#navbar-brand, .brand {
+  font-family: 'Jura', sans-serif;
+}
+
 /* Landing Page */
 .landing {
   position: relative;
@@ -563,7 +568,7 @@ button {
 .chat-items {
   position:absolute;
   bottom:0; 
-  /* height:75%; */
+  max-height:70%;
   width:100%;
   display: flex;
   flex-direction: column;
@@ -597,6 +602,7 @@ button {
 
 #anon-notice {
   color:rgb(247, 0, 255);
+  border-top: 1px solid black;
 }
 
 

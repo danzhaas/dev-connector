@@ -8,14 +8,18 @@ import ChatForm from './ChatForm'
 
 
 const ChatItem = ({ comment }) => (
-    <div className="chat-item" key={comment.id}>
-        <Link to={"/profile/"+comment.user}>
-            <strong>{comment.name}</strong>
-        </Link>
+    <div className="chat-item" key={comment.id} > 
+        {   
+            comment.name==="Anon" ? 
+                <strong>{comment.name}</strong>
+                :
+                <Link to={"/profile/"+comment.user}>
+                    <strong>{comment.name}</strong>
+                </Link>
+        }
         <p>: {comment.text} </p>
     </div>
 );
-
 
 const ChatWindow = ({ auth, getPost, post: { post, loading }, match }) => {
     useEffect(()=> {
@@ -36,23 +40,26 @@ const ChatWindow = ({ auth, getPost, post: { post, loading }, match }) => {
 
             <div className="chat-items">
 
-                <div id="the-items">
-                    { ( !auth.isAuthenticated ) && 
-                        (<p id="anon-notice" className="chat-item">
-                            <strong>SpiderBot:</strong>
-                            Welcome! You are posting as Anonymous.  Register or Login to start networking and building your web.
-                        </p>)
-                    }                
+                <div id="the-items">             
                     { ( post.comments !== undefined ) && 
-                        ( post.comments.reverse()
+
+                        ( 
+                            [...post.comments].reverse()
                             .map( comment => 
-                                <ChatItem comment={comment} />
+                                <ChatItem comment={comment} auth={auth} />
                             )
                         )
                     }
+
+                    { ( !auth.isAuthenticated ) && 
+                        (<p id="anon-notice" className="chat-item">
+                            <strong>SpiderBot:</strong>
+                            Welcome! You are not logged in.  Register or Login to start chatting, networking, and building your web.
+                        </p>)
+                    }   
                 </div>
 
-                <ChatForm postId={post._id} />
+                <ChatForm postId={post._id} auth={auth} />
             </div>
 
         </div>

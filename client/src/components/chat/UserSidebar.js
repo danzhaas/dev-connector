@@ -15,9 +15,9 @@ const UserItem = ({ profile: { user: { _id, name }}}) => {
                 <Link to={`/profile/${_id}`} >
                     <i className="fas fa-user"></i>{' '}
                 </Link>
-                <Link to={`/profile/${_id}`} >
+                {/* <Link to={`/profile/${_id}`} >
                     <i class="fas fa-comment-alt"></i>
-                </Link>
+                </Link> */}
         </div>
     )
 }

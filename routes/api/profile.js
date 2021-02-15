@@ -120,7 +120,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// @route   GET api/profile/user/:user_id      
+// @route   GET api/profile/user/:user_id
 // @desc    Get one user's profile
 // @access  Public
 router.get('/user/:user_id', async (req, res) => {  // the : signifies the following is a route parameter that will be accessible with req.params.user_id

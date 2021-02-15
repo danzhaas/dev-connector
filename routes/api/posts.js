@@ -47,8 +47,8 @@ router.post('/',
 
 // @route   GET api/posts/
 // @desc    Get all posts
-// @access  Private
-router.get('/', auth, async(req, res) => {  
+// @access  Public
+router.get('/', async(req, res) => {  
     try {
         const posts = await Post.find().sort({ date: -1 }); // date: -1 sorts by descending date
         res.json(posts);
@@ -60,8 +60,8 @@ router.get('/', auth, async(req, res) => {
 
 // @route   GET api/posts/:id
 // @desc    Get post by ID
-// @access  Private
-router.get('/:id', auth, async(req, res) => {   // :id is a placeholder parameter
+// @access  Public
+router.get('/:id', async(req, res) => {   // :id is a placeholder parameter
     try {
         const post = await Post.findById( req.params.id );  // findById method with argument req.params.id
 
@@ -188,6 +188,58 @@ router.post('/comment/:id',
         }
     }
 );
+
+
+// ██╗  ██╗███████╗██████╗ ███████╗
+// ██║  ██║██╔════╝██╔══██╗██╔════╝
+// ███████║█████╗  ██████╔╝█████╗  
+// ██╔══██║██╔══╝  ██╔══██╗██╔══╝  
+// ██║  ██║███████╗██║  ██║███████╗
+// ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
+                                
+
+// @route   POST api/posts/comment/anon/:id
+// @desc    Comment on a post as anon
+// @access  Public
+router.post('/comment/anon/:id', 
+    [ // middleware
+        [   // validation checks
+            check('text', 'Text is required') // checks if text is entered - cannot be empty
+                .not()
+                .isEmpty()
+        ]
+    ],
+    async (req, res) => {
+
+        const errors = validationResult(req);   // validation results
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        try {
+            const user = await User.findById("6028bc674e1e6b580ce2dd46").select('-password');  // declares user which references the user document corresponding to user's token, but doesn't include their password for security reasons
+
+            const post = await Post.findById( req.params.id)
+            
+            const newComment = {  // declares the new comment and populates the name and avatar values with data from the User document 
+                text: req.body.text,
+                name: "Anon",
+                avatar:user.avatar,
+                user:user._id
+            };
+
+            post.comments.unshift(newComment);  // Adds comment to front of comments array 
+
+            await post.save(); 
+
+            res.json(post.comments); // responds with all comments for this post
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error');
+        }
+    }
+);
+
 
 // @route   DELETE api/posts/comment/:id/:comment_id
 // @desc    Delete comment on a post
